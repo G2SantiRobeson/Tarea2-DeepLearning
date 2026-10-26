@@ -15,6 +15,7 @@ Se comparan **Naive diario y semanal, SARIMA y LSTM Seq2Seq** para PM2.5 y O3 en
 | `src/graficos.py` | Generar trayectorias, errores por horizonte y curvas |
 | `config.py` | Fechas, ventana, semillas e hiperparámetros |
 | `run.py` | Ejecutar una etapa para un caso o para los seis |
+| `exploracion.ipynb` | Explorar Train y consultar los resultados guardados |
 
 `data/` contiene los dos CSV necesarios. Los archivos originales del enunciado y las clases están en la carpeta superior y se conservan intactos. Los módulos incluyen comentarios sobre sus entradas, salidas y operaciones importantes.
 
@@ -64,7 +65,7 @@ Las entradas faltantes usan el último valor conocido (`ffill`); sin pasado, cer
 
 LSTM: historia de 48 horas, una capa de 16 unidades en cada componente y 24 salidas autoregresivas. `base` usa objetivo, máscara y calendario; `meteo` añade cinco variables meteorológicas históricas y sus máscaras. El Decoder recibe solo el valor anterior y calendario futuro, sin Teacher Forcing. Adam 0.003, batch máximo 256, hasta 25 épocas, paciencia 4 y clipping de norma global 1.
 
-Se entrena con **MSE normalizado enmascarado**, se recupera la época por **MSE de Validation** y se elige la variante por **MAE de Validation en µg/m³**, con semilla 2026. La principal se repite con 2027 y 2028. Test evalúa decisiones ya fijadas. SARIMA usa `(1,0,0)(1,0,0,24)` con constante; sus diagnósticos y limitaciones están en la guía.
+Se entrena con **MSE normalizado enmascarado**, se recupera la época por **MSE de Validation** y se elige la variante por **MAE de Validation en µg/m³**, con semilla 2026. La principal se repite con 2027 y 2028. Test evalúa decisiones ya fijadas. SARIMA usa `(1,0,0)(1,0,0,24)` con constante; sus diagnósticos se guardan en `resultados/modelos/*_sarima.json`. El diagnóstico Ljung–Box es descriptivo: al omitir residuos faltantes se comprimen los rezagos.
 
 ## Resultados y cumplimiento
 
@@ -76,12 +77,9 @@ Se entrena con **MSE normalizado enmascarado**, se recupera la época por **MSE 
 | Origen, hora objetivo, horizontes 1–24, observación y estimación | `predicciones/*.csv.gz` |
 | Errores por horizonte, trayectorias y aprendizaje | `metricas/por_horizonte.csv`, curvas y `figuras/` |
 | Preparación, configuración, tiempos y hardware | `modelos/*_preparacion*`, JSON de ajustes, `configuracion.json` y `entorno.json` |
-| Informe y presentación con copia PDF | `entrega/` |
 
 Hay 441504 filas de predicciones. Validation seleccionó `base` en los tres casos PM2.5 y `meteo` en los tres O3. Se conservan todas las semillas. `codigo_sha256.json` respalda el código de la ejecución original, anterior a las simplificaciones.
 
-Como apoyo opcional, `docs/guia_defensa.md` explica la matemática y las dimensiones, y `notebooks/exploracion.ipynb` conserva la exploración ejecutada de Train. Para revisar los experimentos basta abrir los CSV y las figuras. Las comprobaciones críticas del código usan `assert`.
+Como apoyo opcional, `exploracion.ipynb`, ubicado en la raíz, conserva la exploración ejecutada de Train. Las explicaciones de las operaciones y dimensiones están en los comentarios de los módulos Python. Para revisar los experimentos basta abrir los CSV y las figuras. Las comprobaciones críticas del código usan `assert`.
 
-Los generadores automáticos de informe y presentación se retiraron. Los entregables existentes se mantienen; **la identificación, interpretación y conclusión definitivas corresponden al grupo**. La presentación se puede editar en su PPTX; su PDF es una copia visual.
-
-Fuentes: enunciado oficial, `05_RNN.pdf` y Laboratorio 8. Datos: Chen (2017), *Beijing Multi-Site Air Quality*, UCI, [DOI 10.24432/C5RK5G](https://doi.org/10.24432/C5RK5G), CC BY 4.0; adaptación docente de tres estaciones. Herramientas: Python, NumPy, pandas, SciPy, statsmodels, PyTorch y Matplotlib. Se utilizó asistencia de OpenAI Codex; el grupo debe revisar, comprender y declarar esa ayuda según las reglas del curso.
+El informe PDF y la presentación PPTX con copia PDF son entregables requeridos, pero actualmente no están incluidos en este repositorio. **Su preparación, identificación del grupo, interpretación y conclusión definitivas quedan pendientes a cargo de los estudiantes.**
