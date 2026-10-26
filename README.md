@@ -81,5 +81,3 @@ Se entrena con **MSE normalizado enmascarado**, se recupera la época por **MSE 
 Hay 441504 filas de predicciones. Validation seleccionó `base` en los tres casos PM2.5 y `meteo` en los tres O3. Se conservan todas las semillas. `codigo_sha256.json` respalda el código de la ejecución original, anterior a las simplificaciones.
 
 Como apoyo opcional, `exploracion.ipynb`, ubicado en la raíz, conserva la exploración ejecutada de Train. Las explicaciones de las operaciones y dimensiones están en los comentarios de los módulos Python. Para revisar los experimentos basta abrir los CSV y las figuras. Las comprobaciones críticas del código usan `assert`.
-
-El informe PDF y la presentación PPTX con copia PDF son entregables requeridos, pero actualmente no están incluidos en este repositorio. **Su preparación, identificación del grupo, interpretación y conclusión definitivas quedan pendientes a cargo de los estudiantes.**
