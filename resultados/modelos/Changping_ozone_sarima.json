@@ -1,0 +1,30 @@
+{
+  "segundos_ajuste": 36.09247779999987,
+  "convergio": true,
+  "iteraciones": 19,
+  "aic": 7436.46211260545,
+  "bic": 7468.896306990649,
+  "parametros": {
+    "intercept": -3.797688878958082e-05,
+    "ar.L1": 0.936095166498851,
+    "ar.S.L24": 0.3318907274124145,
+    "sigma2": 0.07912663986522989
+  },
+  "numero_parametros": 4,
+  "advertencias": [],
+  "ljung_box": [
+    {
+      "lag": 24,
+      "lb_stat": 3749.6985806161124,
+      "lb_pvalue": 0.0
+    },
+    {
+      "lag": 48,
+      "lb_stat": 6750.546064653127,
+      "lb_pvalue": 0.0
+    }
+  ],
+  "nota_ljung_box": "Descriptivo: al omitir faltantes se comprimen los rezagos; no prueba formal con grilla completa.",
+  "media_residuo": -9.051179404346043e-05,
+  "std_residuo": 0.283880968665801
+}

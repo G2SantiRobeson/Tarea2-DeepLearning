@@ -1,0 +1,28 @@
+{
+  "columnas": [
+    "pm25",
+    "temp_C",
+    "pressure_hPa",
+    "dewpoint_C",
+    "rain_mm",
+    "wind_ms"
+  ],
+  "media": {
+    "pm25": 66.84811340334565,
+    "temp_C": 14.711137621164537,
+    "pressure_hPa": 1006.9387570183667,
+    "dewpoint_C": 2.474676781271667,
+    "rain_mm": 0.0627253446447508,
+    "wind_ms": 1.7999673735725936
+  },
+  "escala": {
+    "pm25": 71.36271856394335,
+    "temp_C": 10.92356514193292,
+    "pressure_hPa": 9.971536513662073,
+    "dewpoint_C": 13.473859156707805,
+    "rain_mm": 0.8096591580520711,
+    "wind_ms": 1.2901199403929327
+  },
+  "imputacion": "ffill; cero constante si no existe pasado",
+  "ajuste_fin_exclusivo": "2015-12-19"
+}

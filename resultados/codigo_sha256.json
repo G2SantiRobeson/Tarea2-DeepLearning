@@ -1,0 +1,13 @@
+{
+  "config.py": "527d3f1cef59c44fc4ffd476cce4b826f749bd58602e7a8a10dabf78a4ed71ed",
+  "run.py": "f6cbdd79571617f291a2c17854454d20060cecfaf93b3cf90457f80fc360676e",
+  "requirements.txt": "389988b3a10441466ed7ad87db603bcfb678b402d37addd74469281b2c1162d9",
+  "src\\__init__.py": "ae893446455c74dfb33751c9a74ed97cd396f3970be056fecc1aed3227e2bf8f",
+  "src\\datos.py": "afb76f75ebcb6174685c3734560d51fb221116a1e69fd751e0d85c1c249a7fca",
+  "src\\entrenamiento.py": "40a29eb8c158c6286c97e6a6f7a10b68a3b1d369dc847301b25633ef3536e659",
+  "src\\evaluacion.py": "77156dcbbf8f787eb8ec1efa71c136e9092760857ed710544fc95b8f2d212112",
+  "src\\graficos.py": "0375708e5583d4605c79dd1eb51e8227034e3497aafd7a0ef5b3dd3f5588ce2e",
+  "src\\modelo_lstm.py": "4efc7f6557beecfecaed48d65dce7dfa313109aa8b70642e3e6274fe1ac78cc1",
+  "src\\modelo_sarima.py": "dcde509d96497dfc4a2641adc34d982f5be81c6cd945de95401012d998ab33bf",
+  "src\\modelos_naive.py": "d90f574e4660764546a2f502087f68fc79b73ecf717b8ba72d0e9a870393e18b"
+}

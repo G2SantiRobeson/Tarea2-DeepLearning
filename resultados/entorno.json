@@ -1,0 +1,20 @@
+{
+  "python": "3.12.10",
+  "sistema": "Windows-10-10.0.19045-SP0",
+  "procesador": "Intel64 Family 6 Model 165 Stepping 3, GenuineIntel",
+  "cpu_logicas": 12,
+  "hilos_torch": 2,
+  "dispositivo": "CPU",
+  "versiones": {
+    "torch": "2.14.1+cpu",
+    "numpy": "2.5.4",
+    "pandas": "3.1.0",
+    "scipy": "1.18.1",
+    "statsmodels": "0.15.0",
+    "matplotlib": "3.11.2"
+  },
+  "ram_fisica_gib": 31.91,
+  "cpu_modelo": "Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz",
+  "pico_ram_proceso_observado_gib": 1.17657470703125,
+  "nota_ram": "Pico del proceso de experimentos observado durante ejecución; no es una prueba en equipo limitado a 8 GB."
+}

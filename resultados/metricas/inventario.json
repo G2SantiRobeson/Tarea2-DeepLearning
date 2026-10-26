@@ -1,0 +1,8 @@
+{
+  "casos": 6,
+  "referencias_naive": 12,
+  "ajustes_sarima": 6,
+  "entrenamientos_lstm": 24,
+  "filas_prediccion": 441504,
+  "comparabilidad_verificada": true
+}

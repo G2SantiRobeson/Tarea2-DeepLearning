@@ -1,0 +1,26 @@
+column,source_column,unit,role,description,source
+datetime,"year,month,day,hour",hora nominal,clave,Calendario de la fuente; UTC+8 es una convención no certificada,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+site,station,identificador,clave,Nombre original de la estación,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+pm25,PM2.5,µg/m³,objetivo,Concentración de partículas PM2.5,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+ozone,O3,µg/m³,objetivo,Concentración de ozono O3,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+pm10,PM10,µg/m³,auxiliar,Concentración de partículas PM10,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+so2,SO2,µg/m³,auxiliar,Concentración de dióxido de azufre,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+no2,NO2,µg/m³,auxiliar,Concentración de dióxido de nitrógeno,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+co,CO,µg/m³,auxiliar,Concentración de monóxido de carbono; no convertir a mg/m³ sin registrar conversión,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+temp_C,TEMP,°C,auxiliar,Temperatura del aire,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+pressure_hPa,PRES,hPa,auxiliar,Presión atmosférica,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+dewpoint_C,DEWP,°C,auxiliar,Temperatura de punto de rocío,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+rain_mm,RAIN,mm,auxiliar,Precipitación de la serie horaria suministrada,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+wind_ms,WSPM,m/s,auxiliar,Velocidad del viento,https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+wind_direction,wd,categoría,auxiliar,"Dirección del viento, código de brújula original wd; no se codifica ni rellena",https://archive.ics.uci.edu/dataset/501/beijing+multi+site+air+quality+data
+pm25_observed,pm25,booleano,máscara derivada,"True si el valor original está presente, incluido cero; False si NA. No implica ausencia de error instrumental.",Derivada por prepare_data.py sin imputación
+ozone_observed,ozone,booleano,máscara derivada,"True si el valor original está presente, incluido cero; False si NA. No implica ausencia de error instrumental.",Derivada por prepare_data.py sin imputación
+pm10_observed,pm10,booleano,máscara derivada,"True si el valor original está presente, incluido cero; False si NA. No implica ausencia de error instrumental.",Derivada por prepare_data.py sin imputación
+so2_observed,so2,booleano,máscara derivada,"True si el valor original está presente, incluido cero; False si NA. No implica ausencia de error instrumental.",Derivada por prepare_data.py sin imputación
+no2_observed,no2,booleano,máscara derivada,"True si el valor original está presente, incluido cero; False si NA. No implica ausencia de error instrumental.",Derivada por prepare_data.py sin imputación
+co_observed,co,booleano,máscara derivada,"True si el valor original está presente, incluido cero; False si NA. No implica ausencia de error instrumental.",Derivada por prepare_data.py sin imputación
+temp_C_observed,temp_C,booleano,máscara derivada,"True si el valor original está presente, incluido cero; False si NA. No implica ausencia de error instrumental.",Derivada por prepare_data.py sin imputación
+pressure_hPa_observed,pressure_hPa,booleano,máscara derivada,"True si el valor original está presente, incluido cero; False si NA. No implica ausencia de error instrumental.",Derivada por prepare_data.py sin imputación
+dewpoint_C_observed,dewpoint_C,booleano,máscara derivada,"True si el valor original está presente, incluido cero; False si NA. No implica ausencia de error instrumental.",Derivada por prepare_data.py sin imputación
+rain_mm_observed,rain_mm,booleano,máscara derivada,"True si el valor original está presente, incluido cero; False si NA. No implica ausencia de error instrumental.",Derivada por prepare_data.py sin imputación
+wind_ms_observed,wind_ms,booleano,máscara derivada,"True si el valor original está presente, incluido cero; False si NA. No implica ausencia de error instrumental.",Derivada por prepare_data.py sin imputación
