@@ -35,7 +35,7 @@
     "capas": 1,
     "lr": 0.003,
     "batch_size": 256,
-    "epocas": 25,
+    "epocas": 50,
     "paciencia": 4,
     "clip": 1.0,
     "hilos": 2,

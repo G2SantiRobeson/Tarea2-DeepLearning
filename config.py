@@ -13,7 +13,7 @@ CONFIG = {
     'meteorologia': ['temp_C', 'pressure_hPa', 'dewpoint_C', 'rain_mm', 'wind_ms'],
     'variantes': ['base', 'meteo'], 'semillas': [2026, 2027, 2028],
     'ocultas': 16, 'capas': 1, 'lr': 0.003, 'batch_size': 256,
-    'epocas': 25, 'paciencia': 4, 'clip': 1.0, 'hilos': 2,
+    'epocas': 50, 'paciencia': 4, 'clip': 1.0, 'hilos': 2,
     'sarima_order': [1, 0, 0], 'sarima_seasonal': [1, 0, 0, 24],
     'sarima_maxiter': 100,
     'teacher_forcing': False,

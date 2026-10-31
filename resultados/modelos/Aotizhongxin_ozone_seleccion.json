@@ -2,8 +2,8 @@
   "principal": "meteo",
   "criterio": "MAE_validation_original",
   "mae_val_semilla_compartida": {
-    "base": 26.838179686754426,
-    "meteo": 26.274050163885864
+    "base": 25.546197122457077,
+    "meteo": 24.506918059413437
   },
   "semillas": [
     2026,

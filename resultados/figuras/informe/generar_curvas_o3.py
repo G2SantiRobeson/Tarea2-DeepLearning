@@ -14,11 +14,8 @@ from PIL import Image
 def generar_figura():
     """Lee doce CSV y sus JSON, verifica las épocas y guarda la figura a 300 DPI."""
     resultados = Path(__file__).resolve().parents[2]
-    estaciones = ['Aotizhongxin', 'Changping', 'Dingling']
-    configuraciones = [('base', 2026), ('meteo', 2026), ('meteo', 2027), ('meteo', 2028)]
-    titulos = ['Base\nSemilla 2026', 'Meteorológica\nSemilla 2026',
-               'Meteorológica\nSemilla 2027', 'Meteorológica\nSemilla 2028']
-    esperadas = [[25, 25, 25, 24], [23, 23, 24, 24], [24, 25, 24, 23]]
+    config = json.loads((resultados / 'configuracion.json').read_text(encoding='utf-8'))['config']
+    estaciones = config['estaciones']
     salida = Path(__file__).with_name('Figura_O3_Curvas_Aprendizaje.png')
     # Comprobar que las fuentes leídas permanecen intactas tras generar la figura.
     fuentes = []
@@ -35,7 +32,10 @@ def generar_figura():
     for fila, estacion in enumerate(estaciones):
         seleccion = resultados / 'modelos' / f'{estacion}_ozone_seleccion.json'
         fuentes.append((seleccion, hashlib.sha256(seleccion.read_bytes()).digest()))
-        assert json.loads(seleccion.read_text(encoding='utf-8'))['principal'] == 'meteo'
+        principal = json.loads(seleccion.read_text(encoding='utf-8'))['principal']
+        configuraciones = [(v, config['semillas'][0]) for v in config['variantes']]
+        configuraciones += [(principal, s) for s in config['semillas'][1:]]
+        assert len(configuraciones) == 4
         for columna, (variante, semilla) in enumerate(configuraciones):
             nombre = f'{estacion}_ozone_lstm_{variante}_{semilla}'
             csv = resultados / 'metricas' / f'{nombre}_curva.csv'
@@ -47,13 +47,10 @@ def generar_figura():
             assert list(curva.columns) == ['epoca', 'mse_train', 'mse_val']
             assert np.isfinite(curva.to_numpy()).all()
             assert np.array_equal(curva.epoca, np.arange(1, len(curva) + 1))
-            assert len(curva) == registro['epocas']
+            assert len(curva) == registro['epocas'] <= config['epocas']
             recuperada = registro['mejor_epoca']
             # El gráfico original marca el mínimo del MSE ya registrado en Validation.
             assert recuperada == curva.loc[curva.mse_val.idxmin(), 'epoca']
-            if recuperada != esperadas[fila][columna]:
-                print(f'DISCREPANCIA {nombre}: visual={esperadas[fila][columna]}; '
-                      f'registro={recuperada}. Se prioriza el registro.')
             ax = axes[fila, columna]
             train, = ax.plot(curva.epoca, curva.mse_train, color='#1f77b4',
                              lw=1.8, label='Train')
@@ -73,12 +70,13 @@ def generar_figura():
             assert list(linea.get_xdata()) == [recuperada, recuperada]
             if fila == 0:
                 posicion = ax.get_position()
-                fig.text((posicion.x0 + posicion.x1) / 2, .975, titulos[columna],
+                etiqueta = 'Base' if variante == 'base' else 'Meteorológica'
+                fig.text((posicion.x0 + posicion.x1) / 2, .975, f'{etiqueta}\nSemilla {semilla}',
                          ha='center', va='top', fontsize=16)
             print(f'{nombre}: {len(curva)} épocas; recuperada={recuperada}')
         posicion = axes[fila, 0].get_position()
         fig.text(posicion.x0, posicion.y1 + .018,
-                 f'({chr(97 + fila)}) {estacion}', fontsize=16,
+                 f'({chr(97 + fila)}) {estacion} · principal: {principal}', fontsize=16,
                  fontweight='bold', ha='left', va='bottom')
     fig.legend(handles=axes[0, 0].get_lines(), loc='lower center',
                bbox_to_anchor=(.5, .018), ncol=3, frameon=False, fontsize=15)

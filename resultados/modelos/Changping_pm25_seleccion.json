@@ -2,7 +2,7 @@
   "principal": "base",
   "criterio": "MAE_validation_original",
   "mae_val_semilla_compartida": {
-    "base": 32.51044455871288,
+    "base": 30.93636504332378,
     "meteo": 47.933760947776506
   },
   "semillas": [

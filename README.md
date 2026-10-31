@@ -1,57 +1,67 @@
 # Tarea 2 · Pronóstico de calidad del aire en Beijing
 
-Se comparan **Naive diario y semanal, SARIMA y LSTM Seq2Seq** para PM2.5 y O3 en Aotizhongxin, Changping y Dingling: seis casos. A las **23:00 del reloj nominal del CSV** se pronostican las 24 horas del día siguiente.
+Se comparan **Naive diario y semanal, SARIMA y LSTM Seq2Seq** para PM2.5 y O3 en Aotizhongxin, Changping y Dingling: seis casos. A las **23:00 del reloj nominal del CSV** se pronostican las 24 horas del día siguiente. Los resultados incluidos corresponden a **máximo 50 épocas, Early Stopping con paciencia 4 y semillas 2026, 2027 y 2028**.
 
-## Dónde se hace cada cosa
+## Estructura
 
-| Archivo | Responsabilidad |
+| Ruta | Contenido |
 |---|---|
-| `src/datos.py` | Cargar los CSV, preparar entradas y construir ventanas |
-| `src/modelos_naive.py` | Copiar el perfil del día y de la semana anterior |
-| `src/modelo_sarima.py` | Ajustar SARIMA y generar sus pronósticos |
-| `src/modelo_lstm.py` | Definir el Encoder, el Decoder y la salida lineal |
-| `src/entrenamiento.py` | Entrenar con PyTorch y recuperar la mejor época |
-| `src/evaluacion.py` | Calcular MAE, RMSE y cobertura comparable |
-| `src/graficos.py` | Generar trayectorias, errores por horizonte y curvas |
-| `config.py` | Fechas, ventana, semillas e hiperparámetros |
-| `run.py` | Ejecutar una etapa para un caso o para los seis |
-| `exploracion.ipynb` | Explorar Train y consultar los resultados guardados |
+| `src/datos.py` | Lectura, preparación causal y ventanas |
+| `src/modelos_naive.py`, `src/modelo_sarima.py` | Referencias y modelo estadístico |
+| `src/modelo_lstm.py`, `src/entrenamiento.py` | Encoder/Decoder, entrenamiento e inferencia |
+| `src/evaluacion.py`, `src/graficos.py` | Métricas comparables y figuras |
+| `config.py`, `run.py` | Configuración única y ejecución por etapas |
+| `data/` | `beijing_consolidated.csv` y `diccionario.csv` originales |
+| `exploracion.ipynb` | Exploración de Train y consulta de resultados guardados |
+| `resultados/modelos/` | Checkpoints `.pt`, ajustes SARIMA `.pkl`, preparación, selección y tiempos |
+| `resultados/predicciones/` | 84 CSV comprimidos de Validation y Test |
+| `resultados/metricas/` | Comparación, errores por horizonte, variabilidad, curvas e inventario |
+| `resultados/figuras/` | Figuras por caso y exploración de Train |
+| `resultados/figuras/informe/` | Seis figuras compuestas y sus seis generadores Python |
+| `resultados/configuracion.json`, `resultados/entorno.json` | Protocolo, SHA-256 del dataset y entorno registrado |
 
-`data/` contiene los dos CSV necesarios. Los archivos originales del enunciado y las clases están en la carpeta superior y se conservan intactos. Los módulos incluyen comentarios sobre sus entradas, salidas y operaciones importantes.
+Los datos y artefactos necesarios están incluidos. La ejecución no depende de informes, enunciados, respaldos ni carpetas externas.
 
-## Instalar
+## Instalación y datos
 
-Se usó Python 3.12, en CPU. Desde esta carpeta, en PowerShell:
+Se usó Python 3.12.10 en CPU. Desde la raíz del repositorio, en PowerShell:
 
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe run.py --help
 ```
 
-Si `.venv` ya existe, reutilizarlo. En Linux/macOS, usar `python3` y `.venv/bin/python`. No se requieren Node, ReportLab ni herramientas de generación de documentos para ejecutar el proyecto.
+Si `.venv` ya existe, reutilizarlo. En Linux/macOS, usar `python3` y `.venv/bin/python`. Las versiones registradas están fijadas en `requirements.txt`; no se requieren herramientas de generación de documentos. El notebook puede consultarse con sus salidas guardadas; para ejecutarlo se necesita además un frontend Jupyter, no incluido en las dependencias del flujo de consola.
 
-## Ejecutar
+Conservar ambos CSV en `data/`, sin imputarlos ni normalizarlos manualmente. El consolidado contiene una grilla horaria por estación y banderas de observación; `diccionario.csv` describe columnas, unidades y procedencia. `src/datos.py` valida unicidad, grilla y máscaras, y prepara cada caso al ejecutarlo. El hash de los datos debe coincidir con `resultados/configuracion.json`.
 
-Los resultados definitivos **ya están calculados**. Para preparar y reproducir un caso nuevo, primero ejecutar las dos primeras líneas; para completar los seis casos, usar la tercera:
+## Reproducir en una carpeta nueva
+
+Los resultados definitivos ya están en `resultados/`. Para reproducir los seis casos sin sobrescribirlos, crear un nombre de salida único:
 
 ```powershell
-.\.venv\Scripts\python.exe run.py auditoria --salida resultados/reproduccion
-.\.venv\Scripts\python.exe run.py todo --estacion Aotizhongxin --objetivo pm25 --salida resultados/reproduccion
-.\.venv\Scripts\python.exe run.py todo --salida resultados/reproduccion
+$salida = Join-Path (Resolve-Path ..) ('reproducciones/experimento_' + [guid]::NewGuid().ToString('N'))
+.\.venv\Scripts\python.exe run.py todo --salida $salida
 ```
 
-`auditoria` describe los datos y guarda su preparación; `todo` prepara, ejecuta los modelos, evalúa y grafica. Los ajustes ya terminados se reutilizan. Para ejecutar solo una familia se puede usar `naive`, `sarima` o `lstm` en lugar de `todo`.
+Para un solo caso, añadir `--estacion Aotizhongxin --objetivo pm25`. `todo` prepara datos, ejecuta modelos, evalúa y grafica. También se puede elegir `auditoria`, `naive`, `sarima` o `lstm`. `auditoria` guarda preparación y cobertura sin entrenar. La ejecución completa en una salida nueva realiza seis ajustes SARIMA y 24 entrenamientos LSTM; las referencias Naive no requieren ajuste.
 
-Para recalcular tablas y figuras desde las predicciones guardadas, **sin entrenar**:
+Al reutilizar una salida, los ajustes existentes pueden cargarse, pero algunas predicciones, tiempos, tablas y figuras vuelven a escribirse. **Omitir `--salida` usa la carpeta oficial `resultados/`.** Usar siempre otra carpeta para reproducir o experimentar. `--estacion` y `--objetivo` limitan las etapas de modelos; `evaluar` y `figuras` procesan toda la carpeta elegida.
+
+Para verificar tablas y regenerar figuras **sin entrenar**, trabajar sobre una copia nueva de los resultados:
 
 ```powershell
-.\.venv\Scripts\python.exe run.py evaluar --salida resultados/reproduccion
-.\.venv\Scripts\python.exe run.py figuras --salida resultados/reproduccion
+$revision = Join-Path (Resolve-Path ..) ('reproducciones/revision_' + [guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path $revision | Out-Null
+Copy-Item -Path .\resultados\* -Destination $revision -Recurse
+.\.venv\Scripts\python.exe run.py figuras --salida $revision
+Get-ChildItem (Join-Path $revision 'figuras/informe/generar_*.py') | ForEach-Object { & .\.venv\Scripts\python.exe $_.FullName }
 ```
 
-La carpeta elegida debe contener las predicciones de esa ejecución. Omitir `--salida` usa `resultados/` y vuelve a escribir las tablas o figuras definitivas. Para experimentar, usar otra carpeta. `--estacion` y `--objetivo` limitan las etapas de modelos a un caso; `evaluar` y `figuras` resumen toda la carpeta elegida. `run.py --help` muestra estas opciones.
+`figuras` evalúa las predicciones existentes y genera las figuras ordinarias. Para generar solo tablas, usar `evaluar`. Los seis generadores compuestos leen las fuentes relativas a su propia ubicación y escriben PNG a 300 DPI junto al script: ejecutar las copias, como en el ejemplo. Las tres figuras de exploración de Train se conservan desde el notebook.
 
-## Protocolo que debe mantenerse
+## Protocolo experimental
 
 | Bloque | Inicio incluido | Fin excluido | Horas |
 |---|---|---|---:|
@@ -61,23 +71,24 @@ La carpeta elegida debe contener las predicciones de esa ejecución. Omitir `--s
 
 Los bloques abarcan aproximadamente 70/15/15 % del período. Los primeros siete días son contexto: quedan 1016 ejemplos diarios de Train y 219 por bloque de evaluación. El **día objetivo** determina el bloque. Solo se utilizan mediciones disponibles hasta el origen.
 
-Las entradas faltantes usan el último valor conocido (`ffill`); sin pasado, cero y máscara de ausencia. La normalización usa exclusivamente Train observado. Los objetivos faltantes se excluyen del error; los ceros originales sí se evalúan. No se recortan extremos ni predicciones negativas.
+Las entradas faltantes usan el último valor conocido (`ffill`); sin pasado, cero y máscara de ausencia. La normalización se ajusta exclusivamente con Train observado. Los objetivos faltantes se excluyen del error; los ceros originales sí se evalúan. No se recortan extremos ni predicciones negativas.
 
-LSTM: historia de 48 horas, una capa de 16 unidades en cada componente y 24 salidas autoregresivas. `base` usa objetivo, máscara y calendario; `meteo` añade cinco variables meteorológicas históricas y sus máscaras. El Decoder recibe solo el valor anterior y calendario futuro, sin Teacher Forcing. Adam 0.003, batch máximo 256, hasta 25 épocas, paciencia 4 y clipping de norma global 1.
+LSTM: historia de 48 horas, una capa de 16 unidades en cada componente y 24 salidas autoregresivas. `base` usa objetivo, máscara y calendario; `meteo` añade cinco variables meteorológicas históricas y sus máscaras. El Decoder recibe el valor anterior y calendario futuro, sin Teacher Forcing. Adam 0.003, batch máximo 256, **máximo 50 épocas**, paciencia 4, clipping de norma global 1 y dos hilos. Los 24 entrenamientos terminaron por Early Stopping entre **5 y 47 épocas**; 50 es el máximo permitido.
 
-Se entrena con **MSE normalizado enmascarado**, se recupera la época por **MSE de Validation** y se elige la variante por **MAE de Validation en µg/m³**, con semilla 2026. La principal se repite con 2027 y 2028. Test evalúa decisiones ya fijadas. SARIMA usa `(1,0,0)(1,0,0,24)` con constante; sus diagnósticos se guardan en `resultados/modelos/*_sarima.json`. El diagnóstico Ljung–Box es descriptivo: al omitir residuos faltantes se comprimen los rezagos.
+La pérdida es **MSE normalizado enmascarado**. Se recupera la época de menor MSE de Validation normalizado. La variante principal se elige por **MAE de Validation en escala original (µg/m³)**, comparando ambas variantes con semilla 2026; solo la principal se repite con 2027 y 2028. Test evalúa decisiones ya fijadas.
 
-## Resultados y cumplimiento
+| Estación | Variante PM2.5 | Variante O3 |
+|---|---|---|
+| Aotizhongxin | Base | Meteorológica |
+| Changping | Base | Meteorológica |
+| Dingling | Meteorológica | Meteorológica |
 
-| Requisito | Evidencia en `resultados/` |
-|---|---|
-| 6 casos, 12 referencias Naive, 6 ajustes SARIMA y 24 entrenamientos LSTM | `metricas/inventario.json` y `modelos/` |
-| Dos variantes y tres semillas de la principal | `modelos/*_seleccion.json` y `metricas/variabilidad.csv` |
-| MAE, RMSE y cobertura en Validation y Test | `metricas/comparacion.csv` |
-| Origen, hora objetivo, horizontes 1–24, observación y estimación | `predicciones/*.csv.gz` |
-| Errores por horizonte, trayectorias y aprendizaje | `metricas/por_horizonte.csv`, curvas y `figuras/` |
-| Preparación, configuración, tiempos y hardware | `modelos/*_preparacion*`, JSON de ajustes, `configuracion.json` y `entorno.json` |
+Cada caso conserva cuatro entrenamientos: ambas variantes con 2026 y la principal con 2027 y 2028. En Dingling–PM2.5 las repeticiones son `meteo_2027` y `meteo_2028`.
 
-Hay 441504 filas de predicciones. Validation seleccionó `base` en los tres casos PM2.5 y `meteo` en los tres O3. Se conservan todas las semillas. `codigo_sha256.json` respalda el código de la ejecución original, anterior a las simplificaciones.
+SARIMA usa `(1,0,0)(1,0,0,24)` con constante; sus diagnósticos están en `resultados/modelos/*_sarima.json`. Ljung–Box es descriptivo: al omitir residuos faltantes se comprimen los rezagos.
 
-Como apoyo opcional, `exploracion.ipynb`, ubicado en la raíz, conserva la exploración ejecutada de Train. Las explicaciones de las operaciones y dimensiones están en los comentarios de los módulos Python. Para revisar los experimentos basta abrir los CSV y las figuras. Las comprobaciones críticas del código usan `assert`.
+## Resultados y reproducibilidad
+
+`metricas/inventario.json` registra seis casos, 12 referencias Naive, seis ajustes SARIMA y 24 LSTM. Los 84 CSV de predicciones contienen 441504 filas con origen, hora objetivo, horizonte, observación, máscara y estimación. `comparacion.csv`, `por_horizonte.csv` y `variabilidad.csv` conservan métricas, cobertura y semillas; `modelos/*_seleccion.json` documenta la selección por Validation. Las cifras originales se consultan directamente en estos archivos.
+
+Los checkpoints contienen configuración, preparación, arquitectura, semilla, pesos y mejor época, lo que permite comprobar compatibilidad e inferencia. **No se dispone de una revisión o manifiesto del código usado en el entrenamiento que demuestre su identidad histórica exacta.** Verificar artefactos e inferencia no equivale a repetir el entrenamiento ni certifica esa procedencia. El notebook conserva sus salidas de exploración y consulta; los contadores nulos de las consultas finales no acreditan una ejecución completa de todas las celdas.

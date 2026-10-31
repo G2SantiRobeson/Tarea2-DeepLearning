@@ -1,4 +1,32 @@
+# Entorno local y caches de Python/Jupyter
 .venv/
 __pycache__/
-*.pyc
+*.py[cod]
+.ipynb_checkpoints/
+
+# Temporales del sistema y del editor
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+*~
+
+# Credenciales y configuración privada local
+.env
+.env.*
+!.env.example
+.aws/
+.ssh/
+.vscode/
+.idea/
+*.log
+
+# Evidencia operativa e histórica (archivada fuera del repositorio)
+/MIGRACION_50_EPOCAS.md
+/resultados/auditoria_migracion.json
+/resultados/estado_git.txt
+/resultados/manifiesto_sha256.json
+/resultados/codigo_sha256.json
+
+# Instrucciones locales del asistente
 AGENTS.md

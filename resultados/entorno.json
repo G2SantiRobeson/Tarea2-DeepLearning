@@ -12,9 +12,5 @@
     "scipy": "1.18.1",
     "statsmodels": "0.15.0",
     "matplotlib": "3.11.2"
-  },
-  "ram_fisica_gib": 31.91,
-  "cpu_modelo": "Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz",
-  "pico_ram_proceso_observado_gib": 1.17657470703125,
-  "nota_ram": "Pico del proceso de experimentos observado durante ejecución; no es una prueba en equipo limitado a 8 GB."
+  }
 }
